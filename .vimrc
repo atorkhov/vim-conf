@@ -2,19 +2,28 @@ syntax enable
 se nu
 set tabstop=4
 set shiftwidth=4
+set sts=4
+set shiftround
 set expandtab
 set autoindent
+set smartindent
 set nocompatible
 set backspace=indent,eol,start
 filetype on
 filetype plugin on
-set nocp
+autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#CompleteCpp
+
+let g:explHideFiles='^\.'
+let g:explDetailedList=1
+let g:autoclose_on=0
+
+set hidden
 
 " configure tags - add additional tags here or comment out not-used ones
 set tags+=~/.vim/tags/cpp
@@ -42,14 +51,10 @@ if has ("unix")
     let s:uname = system("uname")
     if s:uname == "Darwin\n"
         map <C-F12> :!/usr/local/bin/ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
-        if has ("gui_rinning")
-            au BufWritePost *.c,*.cpp,*.h silent! !/usr/local/bin/ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q . &
-        endif
+        au BufWritePost *.c,*.cpp,*.h silent! !/usr/local/bin/ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q . &
     else
         map <C-F12> :!ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
-        if has ("gui_rinning")
-            au BufWritePost *.c,*.cpp,*.h silent! !ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q . &
-        endif
+        au BufWritePost *.c,*.cpp,*.h silent! !ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q . &
 
         vnoremap <m-x> "+x
         vnoremap <S-Del> "+x
@@ -58,11 +63,11 @@ if has ("unix")
         vnoremap <C-Insert> "+y
 
         " CTRL-V and SHIFT-Insert are Paste
-        map <m-v>		"+gP
-        map <S-Insert>	"+gP
+        map <m-v>       "+gP
+        map <S-Insert>  "+gP
 
-        cmap <m-v>		<C-R>+
-        cmap <S-Insert>	<C-R>+
+        cmap <m-v>      <C-R>+
+        cmap <S-Insert> <C-R>+
 
         " Pasting blockwise and linewise selections is not possible in Insert and
         " Visual mode without the +virtualedit feature.  They are pasted as if they
@@ -71,8 +76,8 @@ if has ("unix")
 
         exe 'inoremap <script> <m-v>' paste#paste_cmd['i']
         exe 'vnoremap <script> <m-v>' paste#paste_cmd['v']
-        imap <S-Insert>	    <m-v>
-        vmap <S-Insert>		<m-v>
+        imap <S-Insert>     <m-v>
+        vmap <S-Insert>     <m-v>
 
         " my old binds
         " nmap <m-v> "+gp
@@ -84,8 +89,11 @@ endif
 
 " keys
 if has ("gui_running")
+	set toolbariconsize=tiny
     if has ("gui_gtk2")
-        set guifont=Monaco\ 10
+        "set guifont=Monaco\ 10
+        "set guifont=Inconsolata
+        set guifont=Terminus
         behave mswin
     endif
     if has("gui_macvim")
@@ -108,15 +116,30 @@ nnoremap <silent> <F9> :TagbarToggle<CR>
 
 " Folding
 set foldmethod=syntax
-set foldcolumn=2
+set foldcolumn=1
+set foldlevel=3
 
 " SPEC
+au BufNewFile *.spec set expandtab | set ts=8 | retab | set ts=4
 let spec_chglog_prepend = 1
-au FileType spec map <buffer> <F5> <Plug>AddChangelogEntry
-let spec_chglog_packager = 'Alexei Panov <me AT elemc DOT name>'
+" au FileType spec map <buffer> <F5> <Plug>AddChangelogEntry
+" use \-c to add changelog entry
+let spec_chglog_packager = 'Alexey Torkhov <atorkhov@gmail.com>'
 
 " Some bindings
 nnoremap <silent> <m-t> :tabnew<CR>
 nnoremap <silent> <m-w> :tabclose<CR>
-nnoremap <silent> <m-}> :tabnext<CR>
-nnoremap <silent> <m-{> :tabprevious<CR>
+nnoremap <silent> <m-]> :tabnext<CR>
+nnoremap <silent> <m-[> :tabprevious<CR>
+nnoremap <silent> <m-1> 1gt
+nnoremap <silent> <m-2> 2gt
+nnoremap <silent> <m-3> 3gt
+nnoremap <silent> <m-4> 4gt
+nnoremap <silent> <m-5> 5gt
+nnoremap <silent> <m-6> 6gt
+nnoremap <silent> <m-7> 7gt
+nnoremap <silent> <m-8> 8gt
+nnoremap <silent> <m-9> 9gt
+nnoremap <silent> <m-0> 10gt
+
+set pastetoggle=<F8>
