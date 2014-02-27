@@ -9,6 +9,7 @@ set autoindent
 set smartindent
 set nocompatible
 set backspace=indent,eol,start
+set backupcopy=auto,breakhardlink
 filetype on
 filetype plugin on
 autocmd FileType python set omnifunc=pythoncomplete#Complete
