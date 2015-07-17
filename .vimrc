@@ -1,23 +1,74 @@
+" Ctrl-O - jump older position in jump list
+
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'gmarik/Vundle.vim'
+Plugin 'Tagbar'
+Plugin 'bufexplorer.zip'
+Plugin 'cmake.vim'
+Plugin 'spec.vim'
+Plugin 'python.vim'
+Plugin 'Python-Syntax-Folding'
+Plugin 'Python-Syntax'
+Plugin 'ruby.vim'
+Plugin 'rails.vim'
+Plugin 'pangloss/vim-javascript'
+Plugin 'EasyGrep'
+Plugin 'kien/ctrlp.vim'
+Plugin 'scrooloose/nerdtree'
+" Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/syntastic' " syntax checking
+Plugin 'bling/vim-airline'
+Plugin 'jnwhiteh/vim-golang'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'tpope/vim-endwise'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-fugitive'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-session'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'w0ng/vim-hybrid'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+
+call vundle#end()
+filetype plugin indent on
+
 syntax enable
-se nu
 set tabstop=4
 set shiftwidth=4
-set sts=4
+set softtabstop=4
 set shiftround
 set expandtab
 set autoindent
 set smartindent
-set nocompatible
+"set nocompatible
 set backspace=indent,eol,start
-filetype on
-filetype plugin on
-autocmd FileType python set omnifunc=pythoncomplete#Complete
+"filetype on
+"filetype plugin on
+set list
+set listchars=tab:▸\ ,nbsp:⋅,trail:•
+set fencs=ucs-bom,utf-8,cp1251
+
+"autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#CompleteCpp
+
+autocmd FileType javascript set ts=2 sw=2 sts=2
+autocmd FileType css,scss set ts=2 sw=2 sts=2
+autocmd FileType html set ts=2 sw=2 sts=2
+autocmd FileType ruby,haml set ts=2 sw=2 sts=2
+
+au Bufread,BufNewFile *.md set filetype=markdown
+
+autocmd FileType markdown set textwidth=79
 
 let g:explHideFiles='^\.'
 let g:explDetailedList=1
@@ -105,19 +156,41 @@ if has ("gui_running")
     endif
 endif
 
+" Stop highlighting
+nnoremap <leader><space> :noh<cr>
+
 " color and theme
-colorscheme desert
+set t_Co=256
+"colorscheme desert
+colorscheme hybrid
 
 " Project support
-map <silent> <c-p> <Plug>ToggleProject
+"map <silent> <c-p> <Plug>ToggleProject
+map <C-p> :NERDTreeToggle<CR>
+if has("gui_running")
+    autocmd vimenter * NERDTree
+    " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+endif
+let NERDTreeIgnore=['\.vim$', '\~$', '\.pyc$']
+let g:bufExplorerDefaultHelp=0
+let g:bufExplorerSplitHorzSize=10
+
+let g:session_autosave = 'yes'
+let g:session_autoload = 'yes'
+
+let g:ctrlp_map = '<leader>p'
 
 " Tagbar
 nnoremap <silent> <F9> :TagbarToggle<CR>
 
-" Folding
+" Folding & numbering
 set foldmethod=syntax
-set foldcolumn=1
 set foldlevel=3
+
+if has("gui_running")
+    set foldcolumn=1
+    set number
+endif
 
 " SPEC
 au BufNewFile *.spec set expandtab | set ts=8 | retab | set ts=4
@@ -125,6 +198,9 @@ let spec_chglog_prepend = 1
 " au FileType spec map <buffer> <F5> <Plug>AddChangelogEntry
 " use \-c to add changelog entry
 let spec_chglog_packager = 'Alexey Torkhov <atorkhov@gmail.com>'
+
+" No hotkeys for menu
+set winaltkeys=no
 
 " Some bindings
 nnoremap <silent> <m-t> :tabnew<CR>
@@ -142,4 +218,30 @@ nnoremap <silent> <m-8> 8gt
 nnoremap <silent> <m-9> 9gt
 nnoremap <silent> <m-0> 10gt
 
+nmap <leader>c <Plug>CommentaryLine
+xmap <leader>c <Plug>Commentary
+
+nmap [h <Plug>GitGutterPrevHunk
+nmap ]h <Plug>GitGutterNextHunk
+
 set pastetoggle=<F8>
+
+nnoremap <Esc>[1;5D b
+nnoremap <Esc>[1;5C w
+
+" Development
+
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-space>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+" Syntax checking
+" let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_scss_checkers = ['scss_lint']
+
+nnoremap <leader>rs :!clear;bundle exec rake<CR>
