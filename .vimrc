@@ -22,7 +22,7 @@ Plugin 'scrooloose/nerdtree'
 " Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic' " syntax checking
 Plugin 'bling/vim-airline'
-Plugin 'jnwhiteh/vim-golang'
+Plugin 'fatih/vim-go'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-commentary'
